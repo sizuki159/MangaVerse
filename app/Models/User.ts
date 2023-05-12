@@ -22,7 +22,7 @@ export default class User extends BaseModel {
   public fullname: string | null
 
   @column()
-  public status: string
+  public status: 'active' | 'disabled'
 
   @column()
   public isEmailVerified: boolean
