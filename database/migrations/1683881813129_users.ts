@@ -1,4 +1,5 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
+import User from 'App/Models/User'
 
 export default class extends BaseSchema {
   protected tableName = 'users'
@@ -8,14 +9,15 @@ export default class extends BaseSchema {
       table.increments('id').primary()
       table.string('email', 255).notNullable().unique()
       table.string('password', 180).notNullable()
+      table.string('fullname', 255).nullable()
+      table.enu('status', Object.values(User.STATUS)).defaultTo(User.STATUS.ACTIVE)
+      table.boolean('is_email_verified').notNullable().defaultTo(true)
       table.string('remember_me_token').nullable()
 
       /**
        * Uses timestampz for PostgreSQL and DATETIME2 for MSSQL
        */
       table.timestamps(true, true)
-      // table.timestamp('created_at', { useTz: true }).notNullable()
-      // table.timestamp('updated_at', { useTz: true }).notNullable()
     })
   }
 
