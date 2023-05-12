@@ -9,6 +9,9 @@ export default class Author extends BaseModel {
   public name: string
 
   @column()
+  public avatar: string
+
+  @column()
   public description: string
 
   @column.dateTime({ autoCreate: true })
