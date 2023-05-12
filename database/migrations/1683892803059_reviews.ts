@@ -6,8 +6,8 @@ export default class extends BaseSchema {
   public async up () {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
-      table.bigInteger('user_id')
-      table.bigInteger('manga_id')
+      table.integer('user_id').unsigned().references('id').inTable('users').onDelete('CASCADE')
+      table.integer('manga_id').unsigned().references('id').inTable('manga').onDelete('CASCADE')
       table.integer('star').unsigned().defaultTo(5)
       table.text('comment')
 

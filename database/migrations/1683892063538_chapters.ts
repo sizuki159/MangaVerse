@@ -9,7 +9,7 @@ export default class extends BaseSchema {
       table.increments('id')
       table.text('name')
       table.integer('number').unsigned()
-      table.bigInteger('manga_id')
+      table.integer('manga_id').unsigned().references('id').inTable('manga').onDelete('CASCADE')
       table.bigInteger('view').defaultTo(0)
       table.text('source')
       table.enu('status', Object.values(Chapter.STATUS)).defaultTo(Chapter.STATUS.ACTIVE)

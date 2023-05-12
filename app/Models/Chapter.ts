@@ -1,5 +1,7 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, HasMany, belongsTo, column, hasMany } from '@ioc:Adonis/Lucid/Orm'
+import Comment from './Comment'
+import Manga from './Manga'
 
 export default class Chapter extends BaseModel {
   public static STATUS = {
@@ -33,4 +35,11 @@ export default class Chapter extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  // Relationship
+  @hasMany(() => Comment)
+  public comments: HasMany<typeof Comment>
+
+  @belongsTo(() => Manga)
+  public manga: BelongsTo<typeof Manga>
 }
