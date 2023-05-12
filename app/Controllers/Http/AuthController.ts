@@ -29,7 +29,7 @@ export default class AuthController {
         const {email, password} = await request.validate(LoginValidator)
         try {
 
-            const token = await auth.use('api').attempt(email, password)
+            const token = await auth.use('api').attempt(email, password, {expiresIn: '1h'})
             const user = await User.findByOrFail('email', email)
 
             if(user.status === User.STATUS.DISABLED) {
@@ -44,7 +44,8 @@ export default class AuthController {
                     token: token
                 }
             })
-        } catch {
+        } catch(ex) {
+            return ex.message
             return response.unauthorized({
                 message: "Sai tài khoản hoặc mật khẩu!",
                 data: null
