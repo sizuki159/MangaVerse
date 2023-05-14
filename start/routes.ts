@@ -20,8 +20,21 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 
+
+// Static file
+Route.get('/public/category/:categoryId/:filename', async ({ response, params }) => {
+    response.download(`public/category/${params.categoryId}/${params.filename}`)
+})
+
+
 Route.group(() => {
     Route.post('register', 'AuthController.register')
     Route.post('login', 'AuthController.login')
 }).prefix('auth')
+
+Route.group(() => {
+    Route.get('', 'CategoryController.all')
+    Route.post('', 'CategoryController.store')
+}).prefix('category')
+
 
