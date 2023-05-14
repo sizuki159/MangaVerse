@@ -23,10 +23,10 @@ export default class User extends BaseModel {
   public password: string
 
   @column()
-  public fullname: string | null
+  public fullname: string
 
   @column()
-  public avatar: string | null
+  public avatar: string
 
   @column()
   public status: 'active' | 'disabled'
