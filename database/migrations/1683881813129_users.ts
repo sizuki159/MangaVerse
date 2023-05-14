@@ -10,6 +10,7 @@ export default class extends BaseSchema {
       table.string('email', 255).notNullable().unique()
       table.string('password', 180).notNullable()
       table.string('fullname', 255).nullable()
+      table.text('avatar').nullable()
       table.enu('status', Object.values(User.STATUS)).defaultTo(User.STATUS.ACTIVE)
       table.boolean('is_email_verified').notNullable().defaultTo(true)
       table.string('remember_me_token').nullable()

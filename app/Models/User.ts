@@ -26,6 +26,9 @@ export default class User extends BaseModel {
   public fullname: string | null
 
   @column()
+  public avatar: string | null
+
+  @column()
   public status: 'active' | 'disabled'
 
   @column()
