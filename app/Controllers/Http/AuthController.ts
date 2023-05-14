@@ -15,12 +15,14 @@ export default class AuthController {
             })
         }
 
-        const newUser = await User.create({
+        let newUser = await User.create({
             email,
             password,
             fullname,
         })
         const token = await auth.use('api').generate(newUser)
+
+        newUser = await User.findOrFail(newUser.id)
         return response.status(201).json({
             message: 'Đăng ký thành công!',
             data: {
