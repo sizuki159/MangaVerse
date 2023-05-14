@@ -41,11 +41,11 @@ export default class AuthController {
             return response.status(200).json({
                 message: "Đăng nhập thành công!",
                 data: {
-                    token: token
+                    token: token,
+                    user
                 }
             })
         } catch(ex) {
-            return ex.message
             return response.unauthorized({
                 message: "Sai tài khoản hoặc mật khẩu!",
                 data: null
