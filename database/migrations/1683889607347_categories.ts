@@ -8,6 +8,7 @@ export default class extends BaseSchema {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
       table.text('name')
+      table.string('image').defaultTo('https://www.studytienganh.vn/upload/2021/06/105605.png')
       table.enu('status', Object.values(Category.STATUS)).defaultTo(Category.STATUS.ACTIVE)
       
       /**

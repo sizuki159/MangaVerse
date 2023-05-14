@@ -15,6 +15,9 @@ export default class Category extends BaseModel {
   public name: string
 
   @column()
+  public image: string
+
+  @column()
   public status: 'active' | 'disabled'
 
   @column.dateTime({ autoCreate: true })

@@ -1,35 +1,40 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import User from 'App/Models/User'
-import EmailValidator from 'App/Validators/EmailValidator'
-import LoginValidator from 'App/Validators/LoginValidator'
-import PasswordValidator from 'App/Validators/PasswordValidator'
+
 
 export default class AuthController {
     // [POST]
     public async register ({request, response, auth}: HttpContextContract) {
-        const {email} = await request.validate(EmailValidator)
-        const {password} = await request.validate(PasswordValidator)
+        const {email, password, fullname} = request.body()
 
-        const {fullname} = request.body()
+        const userOld = await User.findBy('email', email)
+        if(userOld) {
+            return response.badRequest({
+                message: 'Email đã được sử dụng',
+                data: null,
+            })
+        }
 
         const newUser = await User.create({
             email,
             password,
             fullname,
         })
-        
+        const token = await auth.use('api').generate(newUser)
         return response.status(201).json({
-            message: 'Đăng ký thành công. Vui lòng kiểm tra email để xác minh!',
-            data: newUser,
+            message: 'Đăng ký thành công!',
+            data: {
+                token: token,
+                user: newUser,
+            }
         })
     }
 
     // [POST]
     public async login({request, response, auth} : HttpContextContract) {
-        const {email, password} = await request.validate(LoginValidator)
+        const {email, password} = request.body()
         try {
-
-            const token = await auth.use('api').attempt(email, password, {expiresIn: '1h'})
+            const token = await auth.use('api').attempt(email, password)
             const user = await User.findByOrFail('email', email)
 
             if(user.status === User.STATUS.DISABLED) {
