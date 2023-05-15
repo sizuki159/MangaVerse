@@ -23,6 +23,11 @@ export default class MangaController {
             manga.image = image.clientName
             await manga.save()
         }
+
+        return response.created({
+            message: 'Thêm manga thành công',
+            data: manga,
+        })
     }
 
 }

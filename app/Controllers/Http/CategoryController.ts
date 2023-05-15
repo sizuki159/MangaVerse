@@ -21,7 +21,10 @@ export default class CategoryController {
             await category.save()
         }
 
-        return response.json(category)
+        return response.created({
+            message: 'Thêm hoặc update category thành công',
+            data: category,
+        })
     }
 
     public async all({request, response}: HttpContextContract) {
