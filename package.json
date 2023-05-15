@@ -5,9 +5,11 @@
   "scripts": {
     "dev": "node ace serve --watch",
     "build": "node ace build --production",
-    "start": "node server.js",
     "test": "node ace test",
-    "fresh": "node ace migration:fresh --seed"
+    "fresh": "node ace migration:fresh --seed",
+    "start": "pm2 start server.js",
+    "env": "cp .env_deployment build/.env",
+    "deploy": "pm2 delete all ; git pull ; npm i ; npm run build ; npm run env ; cd build ; npm ci --production ; npm start"
   },
   "devDependencies": {
     "@adonisjs/assembler": "^5.9.5",

@@ -5,8 +5,12 @@ import Category from 'App/Models/Category'
 
 export default class MangaController {
     public async all({request, response}: HttpContextContract) {
-        const categories = await Manga.all()
-        return response.json(categories)
+        const mangas = await Manga.all()
+        const data = mangas.map(manga => {
+            manga.image = `http://theanime.online/public/manga/${manga.id}/${manga.image}`
+            return manga
+        })
+        return response.json(data)
     }
 
     public async store({request, response}: HttpContextContract) {
@@ -47,6 +51,7 @@ export default class MangaController {
         await manga.load('categories')
         await manga.load('chapters')
         await manga.load('reviews')
+        manga.image = `http://theanime.online/public/manga/${manga.id}/${manga.image}`
         return response.json(manga)
     }
 
