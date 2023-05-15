@@ -46,6 +46,6 @@ Route.group(() => {
 
 Route.group(() => {
     Route.get('', 'MangaController.all')
-    Route.post('', 'CategoryController.store')
+    Route.post('', 'MangaController.store')
 }).prefix('manga')
 
