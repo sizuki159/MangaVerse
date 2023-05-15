@@ -22,9 +22,15 @@ import Route from '@ioc:Adonis/Core/Route'
 
 
 // Static file
-Route.get('/public/category/:categoryId/:filename', async ({ response, params }) => {
-    response.download(`public/category/${params.categoryId}/${params.filename}`)
-})
+Route.group(() => {
+    Route.get('category/:categoryId/:filename', async ({ response, params }) => {
+        response.download(`public/category/${params.categoryId}/${params.filename}`)
+    })
+
+    Route.get('manga/:mangaId/:filename', async ({ response, params }) => {
+        response.download(`public/manga/${params.mangaId}/${params.filename}`)
+    })
+}).prefix('public')
 
 
 Route.group(() => {
@@ -37,4 +43,9 @@ Route.group(() => {
     Route.post('', 'CategoryController.store')
 }).prefix('category')
 
+
+Route.group(() => {
+    Route.get('', 'MangaController.all')
+    Route.post('', 'CategoryController.store')
+}).prefix('manga')
 
