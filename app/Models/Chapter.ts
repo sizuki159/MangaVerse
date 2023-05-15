@@ -37,9 +37,6 @@ export default class Chapter extends BaseModel {
   public updatedAt: DateTime
 
   // Relationship
-  @hasMany(() => Comment)
-  public comments: HasMany<typeof Comment>
-
   @belongsTo(() => Manga)
   public manga: BelongsTo<typeof Manga>
 }

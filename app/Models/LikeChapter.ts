@@ -1,7 +1,7 @@
 import { DateTime } from 'luxon'
 import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import User from './User'
-import Chapter from './Chapter'
+import Manga from './Manga'
 
 export default class LikeChapter extends BaseModel {
   @column({ isPrimary: true })
@@ -23,6 +23,6 @@ export default class LikeChapter extends BaseModel {
   @belongsTo(() => User)
   public user: BelongsTo<typeof User>
 
-  @belongsTo(() => Chapter)
-  public chapter: BelongsTo<typeof Chapter>
+  @belongsTo(() => Manga)
+  public manga: BelongsTo<typeof Manga>
 }

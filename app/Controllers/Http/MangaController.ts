@@ -2,12 +2,13 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Manga from 'App/Models/Manga'
 import Application from '@ioc:Adonis/Core/Application'
 import Category from 'App/Models/Category'
+import Env from '@ioc:Adonis/Core/Env'
 
 export default class MangaController {
     public async all({request, response}: HttpContextContract) {
         const mangas = await Manga.all()
         const data = mangas.map(manga => {
-            manga.image = `http://theanime.online/public/manga/${manga.id}/${manga.image}`
+            manga.image = `${Env.get('DOMAIN', 'http://192.168.1.230')}/public/manga/${manga.id}/${manga.image}`
             return manga
         })
         return response.json(data)
@@ -51,8 +52,24 @@ export default class MangaController {
         await manga.load('categories')
         await manga.load('chapters')
         await manga.load('reviews')
-        manga.image = `http://theanime.online/public/manga/${manga.id}/${manga.image}`
+        manga.image = `${Env.get('DOMAIN', 'http://192.168.1.230')}/public/manga/${manga.id}/${manga.image}`
+        const chapters = manga.chapters
+        for(let i = 0; i < chapters.length; i++) {
+            const sourceArr = JSON.parse(chapters[i].source)
+            for(let j = 0; j < sourceArr.length; j++) {
+                sourceArr[j] = `${Env.get('DOMAIN', 'http://192.168.1.230')}/public/manga/${manga.id}/chapter/${chapters[i].number}/${sourceArr[j]}`
+            }
+            manga.chapters[i].source = JSON.stringify(sourceArr)
+        }
+
         return response.json(manga)
+    }
+
+    public async allChapterOfManga({response, params}: HttpContextContract) {
+        const manga = await Manga.findOrFail(params.mangaId)
+        await manga.load('chapters')
+        
+        return response.json(manga.chapters)
     }
 
     private getRandomPeople(people: Category[], min: number, max: number): Category[] {

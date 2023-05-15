@@ -30,6 +30,10 @@ Route.group(() => {
     Route.get('manga/:mangaId/:filename', async ({ response, params }) => {
         response.download(`public/manga/${params.mangaId}/${params.filename}`)
     })
+
+    Route.get('manga/:mangaId/chapter/:chapterId/:filename', async ({ response, params }) => {
+        response.download(`public/manga/${params.mangaId}/chapter/${params.chapterId}/${params.filename}`)
+    })
 }).prefix('public')
 
 
@@ -46,7 +50,9 @@ Route.group(() => {
 
 Route.group(() => {
     Route.get('/detail/:mangaId', 'MangaController.detail')
+    Route.post('/detail/:mangaId/chapter', 'ChapterController.store')
+    Route.get('/detail/:mangaId/chapter', 'MangaController.allChapterOfManga')
+    Route.get('/detail/:mangaId/chapter/:chapterId', 'ChapterController.chapterDetail')
     Route.get('', 'MangaController.all')
     Route.post('', 'MangaController.store')
 }).prefix('manga')
-
