@@ -41,6 +41,15 @@ export default class MangaController {
         })
     }
 
+    public async detail({response, params}: HttpContextContract) {
+        const manga = await Manga.findOrFail(params.mangaId)
+        await manga.load('author')
+        await manga.load('categories')
+        await manga.load('chapters')
+        await manga.load('reviews')
+        return response.json(manga)
+    }
+
     private getRandomPeople(people: Category[], min: number, max: number): Category[] {
         const count = Math.floor(Math.random() * (max - min + 1) + min); // số lượng người ngẫu nhiên từ min đến max
         const result: Category[] = [];

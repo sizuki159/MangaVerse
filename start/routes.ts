@@ -45,6 +45,7 @@ Route.group(() => {
 
 
 Route.group(() => {
+    Route.get('/detail/:mangaId', 'MangaController.detail')
     Route.get('', 'MangaController.all')
     Route.post('', 'MangaController.store')
 }).prefix('manga')
