@@ -6,6 +6,7 @@ import Author from './Author'
 import Category from './Category'
 import Comment from './Comment'
 import LikeChapter from './LikeChapter'
+import Follow from './Follow'
 
 export default class Manga extends BaseModel {
   public static STATUS = {
@@ -43,6 +44,9 @@ export default class Manga extends BaseModel {
 
   @hasMany(() => Chapter)
   public chapters: HasMany<typeof Chapter>
+
+  @hasMany(() => Follow)
+  public follower: HasMany<typeof Follow>
 
   @hasMany(() => Comment)
   public comments: HasMany<typeof Comment>

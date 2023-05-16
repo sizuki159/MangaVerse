@@ -45,6 +45,7 @@ Route.group(() => {
 Route.group(() => {
     Route.get('', 'CategoryController.all')
     Route.post('', 'CategoryController.store')
+    Route.get(':categoryId/manga', 'CategoryController.getMangaByCategoryId')
 }).prefix('category')
 
 
@@ -52,7 +53,28 @@ Route.group(() => {
     Route.get('/detail/:mangaId', 'MangaController.detail')
     Route.post('/detail/:mangaId/chapter', 'ChapterController.store')
     Route.get('/detail/:mangaId/chapter', 'MangaController.allChapterOfManga')
-    Route.get('/detail/:mangaId/chapter/:chapterId', 'ChapterController.chapterDetail')
+    Route.get('/detail/:mangaId/chapter/:chapterNumber', 'MangaController.chapterDetailByChapterNumberAndMangaId')
+
+    
+    Route.get('detail/:mangaId/comment', 'MangaController.getAllcomment')
+
     Route.get('', 'MangaController.all')
     Route.post('', 'MangaController.store')
 }).prefix('manga')
+
+Route.group(() => {
+    Route.get('detail/:chapterId', 'ChapterController.chapterDetailByChapterId')
+}).prefix('chapter')
+
+
+Route.group(() => {
+    Route.get('manga/follow', 'UserController.myFollowManga')
+    Route.get('manga/comment', 'UserController.myCommentManga')
+    Route.post('manga/follow', 'UserController.followManga')
+    Route.post('manga/comment', 'UserController.commentManga')
+    Route.post('manga/review', 'UserController.reviewManga')
+
+    Route.post('info', 'UserController.updateInfo')
+    Route.post('uploadAvatar', 'UserController.uploadAvatar')
+}).prefix('user').middleware('auth')
+

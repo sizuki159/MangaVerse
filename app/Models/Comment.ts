@@ -11,7 +11,7 @@ export default class Comment extends BaseModel {
   public userId: number
 
   @column()
-  public chapterId: number
+  public mangaId: number
 
   @column()
   public content: string

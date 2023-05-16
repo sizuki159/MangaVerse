@@ -3,6 +3,7 @@ import Manga from 'App/Models/Manga'
 import Application from '@ioc:Adonis/Core/Application'
 import Category from 'App/Models/Category'
 import Env from '@ioc:Adonis/Core/Env'
+import Chapter from 'App/Models/Chapter'
 
 export default class MangaController {
     public async all({request, response}: HttpContextContract) {
@@ -12,6 +13,12 @@ export default class MangaController {
             return manga
         })
         return response.json(data)
+    }
+
+    public async getAllcomment({request, response, params}: HttpContextContract) {
+        const manga = await Manga.findOrFail(params.mangaId)
+        await manga.load('comments', comments => comments.preload('user'))
+        return response.json(manga.comments)
     }
 
     public async store({request, response}: HttpContextContract) {
@@ -52,6 +59,8 @@ export default class MangaController {
         await manga.load('categories')
         await manga.load('chapters')
         await manga.load('reviews')
+        await manga.load('follower')
+        await manga.load('comments')
         manga.image = `${Env.get('DOMAIN', 'http://192.168.1.230')}/public/manga/${manga.id}/${manga.image}`
         const chapters = manga.chapters
         for(let i = 0; i < chapters.length; i++) {
@@ -61,7 +70,7 @@ export default class MangaController {
             }
             manga.chapters[i].source = JSON.stringify(sourceArr)
         }
-
+        
         return response.json(manga)
     }
 
@@ -70,6 +79,24 @@ export default class MangaController {
         await manga.load('chapters')
         
         return response.json(manga.chapters)
+    }
+
+    public async chapterDetailByChapterNumberAndMangaId({response, params}: HttpContextContract) {
+        const mangaId = params.mangaId
+        const chapterNumber = params.chapterNumber
+
+        const chapterInfo = await Chapter.query().where('number', chapterNumber).where('mangaId', mangaId).first();
+        if(!chapterInfo) return response.noContent();
+        
+        await chapterInfo.load('manga')
+        chapterInfo.manga.image = `${Env.get('DOMAIN', 'http://192.168.1.230')}/public/manga/${chapterInfo.manga.id}/${chapterInfo.manga.image}`
+        const sourceArr = JSON.parse(chapterInfo.source)
+        for(let i = 0; i < sourceArr.length; i++) {
+            sourceArr[i] = `${Env.get('DOMAIN', 'http://192.168.1.230')}/public/manga/${chapterInfo.manga.id}/chapter/${chapterInfo.number}/${sourceArr[i]}`
+        }
+        chapterInfo.source = JSON.stringify(sourceArr)
+
+        return response.json(chapterInfo);
     }
 
     private getRandomPeople(people: Category[], min: number, max: number): Category[] {

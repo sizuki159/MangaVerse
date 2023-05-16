@@ -2,6 +2,7 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Manga from 'App/Models/Manga'
 import Application from '@ioc:Adonis/Core/Application'
 import Env from '@ioc:Adonis/Core/Env'
+import Chapter from 'App/Models/Chapter'
 
 export default class ChapterController {
     public async store({request, response, params}: HttpContextContract) {
@@ -30,7 +31,18 @@ export default class ChapterController {
         })
     }
 
-    public async detail({request, response}: HttpContextContract) {
+    public async chapterDetailByChapterId({request, response, params}: HttpContextContract) {
+        const chapterInfo = await Chapter.findOrFail(params.chapterId);
+        await chapterInfo.load('manga')
+
+        chapterInfo.manga.image = `${Env.get('DOMAIN', 'http://192.168.1.230')}/public/manga/${chapterInfo.manga.id}/${chapterInfo.manga.image}`
+        const sourceArr = JSON.parse(chapterInfo.source)
+        for(let i = 0; i < sourceArr.length; i++) {
+            sourceArr[i] = `${Env.get('DOMAIN', 'http://192.168.1.230')}/public/manga/${chapterInfo.manga.id}/chapter/${chapterInfo.number}/${sourceArr[i]}`
+        }
+        chapterInfo.source = JSON.stringify(sourceArr)
         
+
+        return response.json(chapterInfo)
     }
 }
